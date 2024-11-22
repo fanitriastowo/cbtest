@@ -63,4 +63,19 @@ config :phoenix, :json_library, Jason
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
+
+if config_env() in [:dev] do
+  for path <- [".env.exs", ".env.dev.exs"] do
+    path = Path.join(__DIR__, "..") |> Path.join("config") |> Path.join(path) |> Path.expand()
+    if File.exists?(path), do: import_config(path)
+  end
+end
+
+if config_env() in [:test] do
+  for path <- [".env.exs", ".env.test.exs"] do
+    path = Path.join(__DIR__, "..") |> Path.join("config") |> Path.join(path) |> Path.expand()
+    if File.exists?(path), do: import_config(path)
+  end
+end
+
 import_config "#{config_env()}.exs"
