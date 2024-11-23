@@ -17,7 +17,7 @@ defmodule CbtestWeb.Router do
   scope "/", CbtestWeb do
     pipe_through :browser
 
-    get "/", Controllers.Landing.LandingController, :index
+    live "/", Live.Landing.LandingLive
   end
 
   # Other scopes may use custom stacks.
