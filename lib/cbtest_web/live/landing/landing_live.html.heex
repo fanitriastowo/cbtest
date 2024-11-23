@@ -1,37 +1,31 @@
-<h1>Landing</h1>
+<%= if Map.has_key?(assigns, :q) do %>
+  <p class="font-bold">
+    Soal:
+  </p>
+  <p>
+    <%= @q.question %>
+  </p>
 
-<%= if Map.has_key?(assigns, :list) do %>
+  <p class="font-bold">
+    Pilihan:
+  </p>
   <ul>
-    <li :for={q <- @list}>
-      <p class="font-bold">
-        Soal:
-      </p>
-      <p>
-        <%= q.question %>
-      </p>
-
-      <p class="font-bold">
-        Pilihan:
-      </p>
-      <ul>
-        <.form for={@form} phx-change="change" id="form">
-          <input type="hidden" id="question" name="question" value={q.id} />
-          <li :for={o <- q.options}>
-            <label class="flex items-center gap-4 text-sm leading-6 text-zinc-600">
-              <input
-                name="answer"
-                class="rounded border-zinc-300 text-zinc-900 focus:ring-0"
-                type="radio"
-                id={o["option"]}
-                value={o["option"]}
-                for="answer"
-              />
-              <%= o["option"] %>. <%= o["answer"] %>
-            </label>
-          </li>
-        </.form>
-      </ul>
-    </li>
+    <.form for={@form} phx-change="change" id="form">
+      <input type="hidden" id="question" name="question" value={@q.id} />
+      <li :for={o <- @q.options}>
+        <label class="flex items-center gap-4 text-sm leading-6 text-zinc-600">
+          <input
+            name="answer"
+            class="rounded border-zinc-300 text-zinc-900 focus:ring-0"
+            type="radio"
+            id={o["option"]}
+            value={o["option"]}
+            for="answer"
+          />
+          <%= o["option"] %>. <%= o["answer"] %>
+        </label>
+      </li>
+    </.form>
   </ul>
 <% else %>
   <p>Soal kosong</p>

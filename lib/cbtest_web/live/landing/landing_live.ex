@@ -1,18 +1,15 @@
 defmodule CbtestWeb.Live.Landing.LandingLive do
   use CbtestWeb, :live_view
-  import Ecto.Query
 
   alias Cbtest.Question
-  alias Cbtest.Repo
 
   @impl true
   def mount(_, _, socket) do
-    list =
-      Question |> select([q], %{id: q.id, question: q.question, options: q.options}) |> Repo.all()
+    q = Question.get_first()
 
     {:ok,
      socket
-     |> assign(list: list)
+     |> assign(q: q)
      |> assign(form: to_form(%{"question" => nil, "answer" => nil}))}
   end
 
