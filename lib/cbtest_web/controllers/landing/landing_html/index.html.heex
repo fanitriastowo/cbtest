@@ -15,16 +15,21 @@
       </p>
       <ul>
         <li :for={o <- q.options}>
-          <p><%= Enum.map_join(o, ", ", fn {key, val} -> ~s{#{key}. #{val}} end) %></p>
+          <label class="flex items-center gap-4 text-sm leading-6 text-zinc-600">
+            <input type="hidden" name="answer" value="false" />
+            <input
+              type="radio"
+              id={o["option"]}
+              value={o["option"]}
+              name="answer"
+              class="rounded border-zinc-300 text-zinc-900 focus:ring-0"
+            />
+            <%= o["option"] %>. <%= o["answer"] %>
+          </label>
         </li>
       </ul>
-
-      <p class="font-bold">
-        Pembahasan:
-      </p>
-      <p>
-        <%= q.discussion["text"] %>
-      </p>
     </li>
   </ul>
+<% else %>
+  <p>Soal kosong</p>
 <% end %>
