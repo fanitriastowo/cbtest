@@ -1,1 +1,30 @@
 <h1>Landing</h1>
+
+<%= if Map.has_key?(assigns, :list) do %>
+  <ul>
+    <li :for={q <- @list}>
+      <p class="font-bold">
+        Soal:
+      </p>
+      <p>
+        <%= q.question %>
+      </p>
+
+      <p class="font-bold">
+        Pilihan:
+      </p>
+      <ul>
+        <li :for={o <- q.options}>
+          <p><%= Enum.map_join(o, ", ", fn {key, val} -> ~s{#{key}. #{val}} end) %></p>
+        </li>
+      </ul>
+
+      <p class="font-bold">
+        Pembahasan:
+      </p>
+      <p>
+        <%= q.discussion["text"] %>
+      </p>
+    </li>
+  </ul>
+<% end %>
