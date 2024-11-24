@@ -1,4 +1,4 @@
-defmodule Cbtest.Question do
+defmodule Cbtest.Questions do
   use Ecto.Schema
 
   import Ecto.Changeset
@@ -9,24 +9,26 @@ defmodule Cbtest.Question do
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
-  schema "question" do
+  schema "questions" do
     field :question, :string
     field :options, {:array, {:map, :string}}
     field :correct_answer, {:map, :string}
     field :discussion, {:map, :string}
 
+    has_many :answers, Cbtest.Answers
+
     timestamps(type: :utc_datetime)
   end
 
   @doc false
-  def changeset(%Question{} = questions, attrs \\ {}) do
+  def changeset(%Questions{} = questions, attrs \\ {}) do
     questions
     |> cast(attrs, [:question, :options, :correct_answer, :discussion])
     |> validate_required([:question, :options, :correct_answer, :discussion])
   end
 
   def get_first() do
-    Question
+    Questions
     |> select(
       [q],
       %{id: q.id, question: q.question, options: q.options}
@@ -36,6 +38,10 @@ defmodule Cbtest.Question do
   end
 
   def insert(attrs) do
-    %Question{} |> changeset(attrs) |> Repo.insert()
+    %Questions{} |> changeset(attrs) |> Repo.insert()
+  end
+
+  def get_by(%{id: id}) do
+    Repo.get_by!(Questions, id: id)
   end
 end

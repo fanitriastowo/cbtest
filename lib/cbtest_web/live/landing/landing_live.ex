@@ -1,11 +1,12 @@
 defmodule CbtestWeb.Live.Landing.LandingLive do
   use CbtestWeb, :live_view
 
-  alias Cbtest.Question
+  alias Cbtest.Questions
+  alias Cbtest.Answers
 
   @impl true
   def mount(_, _, socket) do
-    q = Question.get_first()
+    q = Questions.get_first()
 
     {:ok,
      socket
@@ -15,6 +16,8 @@ defmodule CbtestWeb.Live.Landing.LandingLive do
 
   @impl true
   def handle_event("change", %{"answer" => answer, "question" => question}, socket) do
+    Answers.insert(%{answer: answer, id: question, point: 1})
+
     {:noreply,
      socket
      |> put_flash(:info, "Answer is saved #{question}: #{answer}")}
