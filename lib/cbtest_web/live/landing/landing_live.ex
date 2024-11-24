@@ -14,8 +14,9 @@ defmodule CbtestWeb.Live.Landing.LandingLive do
   end
 
   @impl true
-  def handle_event("change", params, socket) do
-    IO.inspect(params, label: "change event")
-    {:noreply, socket}
+  def handle_event("change", %{"answer" => answer, "question" => question}, socket) do
+    {:noreply,
+     socket
+     |> put_flash(:info, "Answer is saved #{question}: #{answer}")}
   end
 end
