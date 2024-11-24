@@ -18,7 +18,11 @@ defmodule CbtestWeb.Live.Landing.LandingLive do
   @impl true
   def handle_event(
         "change",
-        %{"answer" => answer, "question" => question, "session_id" => session_id},
+        %{
+          "answer" => answer,
+          "question" => question,
+          "session_id" => session_id
+        },
         socket
       ) do
     Answers.insert(%{answer: answer, id: question, point: 1, session_id: session_id})
