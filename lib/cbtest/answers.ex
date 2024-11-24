@@ -9,10 +9,10 @@ defmodule Cbtest.Answers do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "answers" do
-    belongs_to(:questions, Questions)
-
     field :answer, :string
     field :point, :integer
+    field :session, :string
+    belongs_to(:questions, Questions)
 
     timestamps(type: :utc_datetime)
   end
@@ -26,7 +26,14 @@ defmodule Cbtest.Answers do
 
   def insert(attrs) do
     Questions.get_by(%{id: attrs.id})
-    |> Ecto.build_assoc(:answers, %{answer: attrs.answer, point: attrs.point})
-    |> Repo.insert!()
+    |> Ecto.build_assoc(:answers, %{
+      answer: attrs.answer,
+      point: attrs.point,
+      session: attrs.session_id
+    })
+    |> Repo.insert!(
+      on_conflict: {:replace_all_except, [:questions_id, :session]},
+      conflict_target: [:questions_id, :session]
+    )
   end
 end

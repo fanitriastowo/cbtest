@@ -8,7 +8,8 @@ defmodule CbtestWeb.Endpoint do
     store: :cookie,
     key: "_cbtest_key",
     signing_salt: "eJBhd5or",
-    same_site: "Lax"
+    same_site: "Lax",
+    max_age: 60 * 60 * 24 # 24 hours
   ]
 
   socket "/live", Phoenix.LiveView.Socket,

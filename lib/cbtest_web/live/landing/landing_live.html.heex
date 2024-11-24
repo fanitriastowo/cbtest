@@ -12,6 +12,7 @@
   <ul>
     <.form for={@form} phx-change="change" id="form">
       <input type="hidden" id="question" name="question" value={@q.id} />
+      <input type="hidden" id="session_id" name="session_id" value={@session_id} />
       <li :for={o <- @q.options}>
         <label class="flex items-center gap-4 text-sm leading-6 text-zinc-600">
           <input
