@@ -1,8 +1,7 @@
 defmodule CbtestWeb.Live.Landing.LandingLive do
   use CbtestWeb, :live_view
 
-  alias Cbtest.Questions
-  alias Cbtest.Answers
+  alias Cbtest.{Questions, Answers}
 
   @impl true
   def mount(_, %{"session_id" => session_id}, socket) do

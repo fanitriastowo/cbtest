@@ -1,8 +1,7 @@
 defmodule Cbtest.Questions do
   use Ecto.Schema
 
-  import Ecto.Changeset
-  import Ecto.Query
+  import Ecto.{Changeset, Query}
 
   alias Cbtest.Repo
   alias __MODULE__
@@ -25,6 +24,7 @@ defmodule Cbtest.Questions do
     questions
     |> cast(attrs, [:question, :options, :correct_answer, :discussion])
     |> validate_required([:question, :options, :correct_answer, :discussion])
+    |> cast_assoc(:answers)
   end
 
   def get_first() do
@@ -38,7 +38,7 @@ defmodule Cbtest.Questions do
   end
 
   def insert(attrs) do
-    %Questions{} |> changeset(attrs) |> Repo.insert()
+    %Questions{} |> changeset(attrs) |> Repo.insert!()
   end
 
   def get_by(%{id: id}) do
