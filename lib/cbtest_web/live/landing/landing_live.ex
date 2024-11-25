@@ -5,11 +5,12 @@ defmodule CbtestWeb.Live.Landing.LandingLive do
 
   @impl true
   def mount(_, %{"session_id" => session_id}, socket) do
-    q = Questions.get_first()
+    c = Questions.get_all()
 
     {:ok,
      socket
-     |> assign(q: q)
+     |> assign(q: Enum.at(c, 0))
+     |> assign(c: c)
      |> assign(session_id: session_id)
      |> assign(form: to_form(%{"question" => nil, "answer" => nil}))}
   end
@@ -29,5 +30,14 @@ defmodule CbtestWeb.Live.Landing.LandingLive do
     {:noreply,
      socket
      |> put_flash(:info, "Answer is saved #{question}: #{answer}")}
+  end
+
+  @impl true
+  def handle_event("go_to", %{"value" => id}, socket) do
+    q = Questions.get_by(id)
+
+    {:noreply,
+     socket
+     |> assign(q: q)}
   end
 end

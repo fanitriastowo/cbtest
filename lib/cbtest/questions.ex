@@ -33,7 +33,7 @@ defmodule Cbtest.Questions do
       [q],
       %{id: q.id, question: q.question, options: q.options}
     )
-    |> first()
+    |> first(desc: :inserted_at)
     |> Repo.one()
   end
 
@@ -41,7 +41,22 @@ defmodule Cbtest.Questions do
     %Questions{} |> changeset(attrs) |> Repo.insert!()
   end
 
-  def get_by(%{id: id}) do
+  def get_by(id) do
     Repo.get_by!(Questions, id: id)
+  end
+
+  def count() do
+    from(q in Questions, select: count(q.id))
+    |> Repo.one()
+  end
+
+  def get_all() do
+    Questions
+    |> select(
+      [q],
+      %{id: q.id, question: q.question, options: q.options}
+    )
+    |> order_by(desc: :inserted_at)
+    |> Repo.all()
   end
 end

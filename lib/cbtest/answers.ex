@@ -25,7 +25,7 @@ defmodule Cbtest.Answers do
   end
 
   def insert(attrs) do
-    Questions.get_by(%{id: attrs.id})
+    Questions.get_by(attrs.id)
     |> Ecto.build_assoc(:answers, %{
       answer: attrs.answer,
       point: attrs.point,
