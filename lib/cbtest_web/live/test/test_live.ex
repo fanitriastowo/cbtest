@@ -6,13 +6,16 @@ defmodule CbtestWeb.Live.Test.TestLive do
   @impl true
   def mount(_, %{"session_id" => session_id}, socket) do
     c = Questions.get_all()
+    question = Enum.at(c, 0)
+    answer = Answers.get_by_session(session_id, question.id)
 
     {:ok,
      socket
-     |> assign(q: Enum.at(c, 0))
+     |> assign(q: question)
      |> assign(c: c)
      |> assign(active_id: Enum.at(c, 0).id)
      |> assign(session_id: session_id)
+     |> assign(your_answer: (answer && answer.answer) || nil)
      |> assign(form: to_form(%{"question" => nil, "answer" => nil}))}
   end
 
@@ -32,13 +35,14 @@ defmodule CbtestWeb.Live.Test.TestLive do
   end
 
   @impl true
-  def handle_event("go_to", %{"value" => id}, socket) do
-    q = Questions.get_by(id)
+  def handle_event("go_to", %{"value" => question_id}, socket) do
+    q = Questions.get_by(question_id)
+    answer = Answers.get_by_session(socket.assigns.session_id, question_id)
 
     {:noreply,
      socket
      |> assign(q: q)
-     |> assign(active_id: id)
-    }
+     |> assign(your_answer: (answer && answer.answer) || nil)
+     |> assign(active_id: question_id)}
   end
 end

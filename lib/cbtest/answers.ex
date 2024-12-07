@@ -1,9 +1,8 @@
 defmodule Cbtest.Answers do
   use Ecto.Schema
-  import Ecto.Changeset
+  import Ecto.{Changeset, Query}
 
-  alias Cbtest.Questions
-  alias Cbtest.Repo
+  alias Cbtest.{Questions, Repo}
   alias __MODULE__
 
   @primary_key {:id, :binary_id, autogenerate: true}
@@ -35,5 +34,10 @@ defmodule Cbtest.Answers do
       on_conflict: {:replace_all_except, [:questions_id, :session]},
       conflict_target: [:questions_id, :session]
     )
+  end
+
+  def get_by_session(session_id, question_id) do
+    from(Answers, where: [session: ^session_id, questions_id: ^question_id])
+    |> Repo.one()
   end
 end
