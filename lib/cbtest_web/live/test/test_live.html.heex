@@ -1,5 +1,5 @@
 <div class="flex">
-  <div>
+  <div class="container p-2 m-2 w-96 grow">
     <%= if Map.has_key?(assigns, :q) do %>
       <p class="font-bold">
         Soal:
@@ -34,7 +34,7 @@
       <p>Soal kosong</p>
     <% end %>
   </div>
-  <div class="border-2">
+  <div class="border-2 w-auto">
     <ul>
       <li :for={{c, i} <- Enum.with_index(@c)} class="inline">
         <button class="p-2 mr-1 mb-1 bg-teal-200 rounded-md" phx-click="go_to" value={c.id}>
