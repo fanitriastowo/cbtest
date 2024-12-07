@@ -1,4 +1,4 @@
-defmodule CbtestWeb.Live.Landing.LandingLive do
+defmodule CbtestWeb.Live.Test.TestLive do
   use CbtestWeb, :live_view
 
   alias Cbtest.{Questions, Answers}
@@ -27,9 +27,7 @@ defmodule CbtestWeb.Live.Landing.LandingLive do
       ) do
     Answers.insert(%{answer: answer, id: question, point: 1, session_id: session_id})
 
-    {:noreply,
-     socket
-     |> put_flash(:info, "Answer is saved #{question}: #{answer}")}
+    {:noreply, socket}
   end
 
   @impl true

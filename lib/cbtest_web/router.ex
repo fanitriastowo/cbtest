@@ -19,7 +19,7 @@ defmodule CbtestWeb.Router do
     pipe_through :browser
 
     get "/", Controllers.PageController, :index
-    live "/pengerjaan", Live.Landing.LandingLive
+    live "/test", Live.Test.TestLive
   end
 
   # Other scopes may use custom stacks.
