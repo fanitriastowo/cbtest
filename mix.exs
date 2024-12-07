@@ -32,14 +32,14 @@ defmodule Cbtest.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.7.14"},
+      {:phoenix, "~> 1.7.17"},
       {:phoenix_ecto, "~> 4.6.3"},
       {:ecto_sql, "~> 3.12.1"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 4.1.1"},
       {:phoenix_live_reload, "~> 1.5.3", only: :dev},
       # TODO bump on release to {:phoenix_live_view, "~> 1.0.0"},
-      {:phoenix_live_view, "~> 1.0.0-rc.7", override: true},
+      {:phoenix_live_view, "~> 1.0.0", override: true},
       {:floki, ">= 0.36.3", only: :test},
       {:phoenix_live_dashboard, "~> 0.8.3"},
       {:esbuild, "~> 0.8.2", runtime: Mix.env() == :dev},
@@ -58,7 +58,7 @@ defmodule Cbtest.MixProject do
       {:gettext, "~> 0.26.2"},
       {:jason, "~> 1.4.4"},
       {:dns_cluster, "~> 0.1.3"},
-      {:bandit, "~> 1.6"}
+      {:bandit, "~> 1.6.1"}
     ]
   end
 

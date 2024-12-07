@@ -11,6 +11,7 @@ defmodule CbtestWeb.Live.Test.TestLive do
      socket
      |> assign(q: Enum.at(c, 0))
      |> assign(c: c)
+     |> assign(active_id: Enum.at(c, 0).id)
      |> assign(session_id: session_id)
      |> assign(form: to_form(%{"question" => nil, "answer" => nil}))}
   end
@@ -36,6 +37,8 @@ defmodule CbtestWeb.Live.Test.TestLive do
 
     {:noreply,
      socket
-     |> assign(q: q)}
+     |> assign(q: q)
+     |> assign(active_id: id)
+    }
   end
 end
