@@ -12,7 +12,7 @@
         Pilihan:
       </p>
       <ul>
-        <.form for={@form} phx-change="change" id="form">
+        <.form for={@form} phx-change="choose" id="form">
           <input type="hidden" id="question" name="question" value={@q.id} />
           <input type="hidden" id="session_id" name="session_id" value={@session_id} />
           <li :for={o <- @q.options}>

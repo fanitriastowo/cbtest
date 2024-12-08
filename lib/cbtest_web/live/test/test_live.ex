@@ -21,7 +21,7 @@ defmodule CbtestWeb.Live.Test.TestLive do
 
   @impl true
   def handle_event(
-        "change",
+        "choose",
         %{
           "answer" => answer,
           "question" => question,
