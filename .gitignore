@@ -36,6 +36,7 @@ npm-debug.log
 /assets/node_modules/
 
 .env.*
-config/.env.*
+/config/.env.*
+!/config/.env.example.exs
 
 .DS_Store
