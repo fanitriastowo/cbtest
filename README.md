@@ -16,3 +16,7 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   * Docs: https://hexdocs.pm/phoenix
   * Forum: https://elixirforum.com/c/phoenix-forum
   * Source: https://github.com/phoenixframework/phoenix
+
+## Resources
+I compile some of EQ questions that are available publicly. Here are some of them:
+  * https://www.drugsandalcohol.ie/26776/1/Emotional_intelligence_questionnaire-LAL1.pdf

@@ -1,4 +1,17 @@
 <div class="flex">
+  <div class="w-auto p-2 border-r-2">
+    <ul>
+      <li :for={{c, i} <- Enum.with_index(@c)} class="inline">
+        <button
+          class={"#{if @active_id == c.id, do: "bg-teal-200 outline-none ring ring-violet-300"} p-2 mr-1 mb-1 bg-red-200 rounded-sm "}
+          phx-click="go_to"
+          value={c.id}
+        >
+          {i + 1}
+        </button>
+      </li>
+    </ul>
+  </div>
   <div class="container p-2 m-2 w-96 grow">
     <%= if Map.has_key?(assigns, :q) do %>
       <p class="font-bold">
@@ -34,18 +47,5 @@
     <% else %>
       <p>Soal kosong</p>
     <% end %>
-  </div>
-  <div class="w-auto p-2">
-    <ul>
-      <li :for={{c, i} <- Enum.with_index(@c)} class="inline">
-        <button
-          class={"#{if @active_id == c.id, do: "bg-teal-200 outline-none ring ring-violet-300"} p-2 mr-1 mb-1 bg-red-200 rounded-sm "}
-          phx-click="go_to"
-          value={c.id}
-        >
-          {i + 1}
-        </button>
-      </li>
-    </ul>
   </div>
 </div>
