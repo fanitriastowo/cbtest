@@ -32,18 +32,17 @@ defmodule Cbtest.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.7.17"},
-      {:phoenix_ecto, "~> 4.6.3"},
-      {:ecto_sql, "~> 3.12.1"},
-      {:postgrex, ">= 0.0.0"},
-      {:phoenix_html, "~> 4.1.1"},
-      {:phoenix_live_reload, "~> 1.5.3", only: :dev},
-      # TODO bump on release to {:phoenix_live_view, "~> 1.0.0"},
-      {:phoenix_live_view, "~> 1.0.0", override: true},
-      {:floki, ">= 0.36.3", only: :test},
-      {:phoenix_live_dashboard, "~> 0.8.3"},
-      {:esbuild, "~> 0.8.2", runtime: Mix.env() == :dev},
-      {:tailwind, "~> 0.2.4", runtime: Mix.env() == :dev},
+      {:phoenix, "~> 1.8.9"},
+      {:phoenix_ecto, "~> 4.7.0"},
+      {:ecto_sql, "~> 3.14.0"},
+      {:ecto_sqlite3, "~> 0.17"},
+      {:phoenix_html, "~> 4.3.0"},
+      {:phoenix_live_reload, "~> 1.6.2", only: :dev},
+      {:phoenix_live_view, "~> 1.2.6", override: true},
+      {:floki, ">= 0.38.4", only: :test},
+      {:phoenix_live_dashboard, "~> 0.8.7"},
+      {:esbuild, "~> 0.10.0", runtime: Mix.env() == :dev},
+      {:tailwind, "~> 0.5.1", runtime: Mix.env() == :dev},
       {:heroicons,
        github: "tailwindlabs/heroicons",
        tag: "v2.1.1",
@@ -51,14 +50,14 @@ defmodule Cbtest.MixProject do
        app: false,
        compile: false,
        depth: 1},
-      {:swoosh, "~> 1.17.3"},
-      {:finch, "~> 0.19"},
-      {:telemetry_metrics, "~> 1.0"},
-      {:telemetry_poller, "~> 1.1.0"},
-      {:gettext, "~> 0.26.2"},
-      {:jason, "~> 1.4.4"},
-      {:dns_cluster, "~> 0.1.3"},
-      {:bandit, "~> 1.6.1"}
+      {:swoosh, "~> 1.26.3"},
+      {:finch, "~> 0.23"},
+      {:telemetry_metrics, "~> 1.1"},
+      {:telemetry_poller, "~> 1.3.0"},
+      {:gettext, "~> 1.0.2"},
+      {:jason, "~> 1.4.5"},
+      {:dns_cluster, "~> 0.2.0"},
+      {:bandit, "~> 1.12.0"}
     ]
   end
 

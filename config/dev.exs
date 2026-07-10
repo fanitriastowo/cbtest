@@ -2,13 +2,10 @@ import Config
 
 # Configure your database
 config :cbtest, Cbtest.Repo,
-  username: System.get_env("POSTGRES_USERNAME"),
-  password: System.get_env("POSTGRES_PASSWORD"),
-  hostname: System.get_env("POSTGRES_HOST"),
-  database: System.get_env("POSTGRES_DB"),
+  database: Path.expand("../cbtest_dev.db", __DIR__),
+  pool_size: 5,
   stacktrace: true,
-  show_sensitive_data_on_connection_error: true,
-  pool_size: 10
+  show_sensitive_data_on_connection_error: true
 
 # For development, we disable any cache and enable
 # debugging and code reloading.

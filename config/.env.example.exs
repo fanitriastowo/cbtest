@@ -1,4 +1,2 @@
-System.put_env("POSTGRES_USERNAME", "postgres")
-System.put_env("POSTGRES_PASSWORD", "postgres")
-System.put_env("POSTGRES_HOST", "localhost")
-System.put_env("POSTGRES_DB", "cbtest_dev")
+# SQLite needs no DB credentials in dev/test — the database is a local file
+# (see config/dev.exs and config/test.exs). Add any other runtime env vars here.
