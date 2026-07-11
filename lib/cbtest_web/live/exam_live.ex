@@ -1,4 +1,4 @@
-defmodule CbtestWeb.Live.Test.TestLive do
+defmodule CbtestWeb.ExamLive do
   use CbtestWeb, :live_view
 
   alias Cbtest.{Questions, Answers}
@@ -17,17 +17,18 @@ defmodule CbtestWeb.Live.Test.TestLive do
       |> Map.new(fn a -> {a.questions_id, a.answer} end)
 
     {:ok,
-     socket
-     |> assign(session_id: session_id)
-     |> assign(questions: questions)
-     |> assign(idx: 0)
-     |> assign(answers: answers)
-     |> assign(flagged: %{})
-     |> assign(timer_ref: timer_ref)
-     |> assign(duration: @duration)
-     |> assign(time_left: @duration)
-     |> assign(submitted: false)
-     |> assign(show_confirm: false)}
+     assign(socket,
+       session_id: session_id,
+       questions: questions,
+       idx: 0,
+       answers: answers,
+       flagged: %{},
+       timer_ref: timer_ref,
+       duration: @duration,
+       time_left: @duration,
+       submitted: false,
+       show_confirm: false
+     )}
   end
 
   @impl true
@@ -88,14 +89,15 @@ defmodule CbtestWeb.Live.Test.TestLive do
     timer_ref = start_timer(socket)
 
     {:noreply,
-     socket
-     |> assign(idx: 0)
-     |> assign(answers: %{})
-     |> assign(flagged: %{})
-     |> assign(timer_ref: timer_ref)
-     |> assign(time_left: @duration)
-     |> assign(submitted: false)
-     |> assign(show_confirm: false)}
+     assign(socket,
+       idx: 0,
+       answers: %{},
+       flagged: %{},
+       timer_ref: timer_ref,
+       time_left: @duration,
+       submitted: false,
+       show_confirm: false
+     )}
   end
 
   @impl true

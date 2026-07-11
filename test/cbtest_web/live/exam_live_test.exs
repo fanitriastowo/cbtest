@@ -1,4 +1,4 @@
-defmodule CbtestWeb.Live.Test.TestLiveTest do
+defmodule CbtestWeb.ExamLiveTest do
   use CbtestWeb.ConnCase
 
   import Phoenix.LiveViewTest
@@ -22,7 +22,7 @@ defmodule CbtestWeb.Live.Test.TestLiveTest do
     q1 = make_question("First question", "B")
     q2 = make_question("Second question", "A")
 
-    {:ok, view, _html} = live(conn, "/test")
+    {:ok, view, _html} = live(conn, "/exam")
     html = render(view)
 
     assert html =~ "Emotional Intelligence Assessment"
@@ -48,7 +48,7 @@ defmodule CbtestWeb.Live.Test.TestLiveTest do
     make_question("Only A", "A")
     make_question("Only B", "B")
 
-    {:ok, view, _html} = live(conn, "/test")
+    {:ok, view, _html} = live(conn, "/exam")
 
     assert has_element?(view, "button[phx-click=prev][disabled]")
     refute has_element?(view, "button[phx-click=next][disabled]")
