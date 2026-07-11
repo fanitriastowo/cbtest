@@ -1,6 +1,6 @@
 defmodule Cbtest.Answers do
   use Ecto.Schema
-  import Ecto.{Changeset, Query}
+  import Ecto.Query
 
   alias Cbtest.{Questions, Repo}
   alias __MODULE__
@@ -16,29 +16,17 @@ defmodule Cbtest.Answers do
     timestamps(type: :utc_datetime)
   end
 
-  @doc false
-  def changeset(%Answers{} = answers, attrs \\ {}) do
-    answers
-    |> cast(attrs, [:question_id, :answer, :point])
-    |> validate_required([:question_id, :answer, :point])
-  end
-
   def insert(attrs) do
-    Questions.get_by(attrs.id)
-    |> Ecto.build_assoc(:answers, %{
+    %Answers{
+      questions_id: attrs.id,
       answer: attrs.answer,
       point: attrs.point,
       session: attrs.session_id
-    })
+    }
     |> Repo.insert!(
       on_conflict: {:replace_all_except, [:questions_id, :session]},
       conflict_target: [:questions_id, :session]
     )
-  end
-
-  def get_by_session(session_id, question_id) do
-    from(Answers, where: [session: ^session_id, questions_id: ^question_id])
-    |> Repo.one()
   end
 
   def get_all_by_session(session_id) do

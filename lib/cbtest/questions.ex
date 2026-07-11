@@ -27,27 +27,12 @@ defmodule Cbtest.Questions do
     |> cast_assoc(:answers)
   end
 
-  def get_first() do
-    Questions
-    |> select(
-      [q],
-      %{id: q.id, question: q.question, options: q.options}
-    )
-    |> first(desc: :inserted_at)
-    |> Repo.one()
-  end
-
   def insert(attrs) do
     %Questions{} |> changeset(attrs) |> Repo.insert!()
   end
 
   def get_by(id) do
     Repo.get_by!(Questions, id: id)
-  end
-
-  def count() do
-    from(q in Questions, select: count(q.id))
-    |> Repo.one()
   end
 
   def get_all() do

@@ -7,7 +7,7 @@ defmodule CbtestWeb.Live.Test.TestLive do
 
   @impl true
   def mount(_, %{"session_id" => session_id}, socket) do
-    if connected?(socket), do: :timer.send_interval(1000, self(), :tick)
+    timer_ref = start_timer(socket)
 
     questions = Questions.get_all()
 
@@ -23,6 +23,7 @@ defmodule CbtestWeb.Live.Test.TestLive do
      |> assign(idx: 0)
      |> assign(answers: answers)
      |> assign(flagged: %{})
+     |> assign(timer_ref: timer_ref)
      |> assign(duration: @duration)
      |> assign(time_left: @duration)
      |> assign(submitted: false)
@@ -76,18 +77,22 @@ defmodule CbtestWeb.Live.Test.TestLive do
 
   @impl true
   def handle_event("confirm_submit", _params, socket) do
-    {:noreply, assign(socket, submitted: true, show_confirm: false)}
+    cancel_timer(socket.assigns.timer_ref)
+    {:noreply, assign(socket, submitted: true, show_confirm: false, timer_ref: nil)}
   end
 
   @impl true
   def handle_event("retake", _params, socket) do
     Answers.delete_by_session(socket.assigns.session_id)
+    cancel_timer(socket.assigns.timer_ref)
+    timer_ref = start_timer(socket)
 
     {:noreply,
      socket
      |> assign(idx: 0)
      |> assign(answers: %{})
      |> assign(flagged: %{})
+     |> assign(timer_ref: timer_ref)
      |> assign(time_left: @duration)
      |> assign(submitted: false)
      |> assign(show_confirm: false)}
@@ -98,10 +103,26 @@ defmodule CbtestWeb.Live.Test.TestLive do
 
   def handle_info(:tick, socket) do
     case socket.assigns.time_left do
-      t when t <= 1 -> {:noreply, assign(socket, time_left: 0, submitted: true)}
-      t -> {:noreply, assign(socket, time_left: t - 1)}
+      t when t <= 1 ->
+        cancel_timer(socket.assigns.timer_ref)
+        {:noreply, assign(socket, time_left: 0, submitted: true, timer_ref: nil)}
+
+      t ->
+        {:noreply, assign(socket, time_left: t - 1)}
     end
   end
+
+  # --- timer helpers ---
+
+  defp start_timer(socket) do
+    if connected?(socket) do
+      {:ok, ref} = :timer.send_interval(1000, self(), :tick)
+      ref
+    end
+  end
+
+  defp cancel_timer(nil), do: :ok
+  defp cancel_timer(ref), do: :timer.cancel(ref)
 
   # --- helpers used by the template ---
 
