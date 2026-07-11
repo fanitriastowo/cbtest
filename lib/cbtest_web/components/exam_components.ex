@@ -1,0 +1,306 @@
+defmodule CbtestWeb.ExamComponents do
+  @moduledoc """
+  UI sections of the exam page. Each component is markup only — events bubble up
+  to the LiveView that renders them.
+  """
+  use CbtestWeb, :html
+
+  attr :time_left, :integer, required: true
+
+  def exam_header(assigns) do
+    assigns = assign(assigns, :low, assigns.time_left <= 60)
+
+    ~H"""
+    <header class="flex items-center justify-between gap-4 px-7 py-3.5 bg-zinc-900 text-white shadow-sm">
+      <div class="flex items-center gap-3.5">
+        <div class="w-[34px] h-[34px] rounded-lg bg-brand flex items-center justify-center font-extrabold text-base text-white">
+          EQ
+        </div>
+        <div class="flex flex-col gap-0.5">
+          <div class="text-[15px] font-bold -tracking-[.01em]">
+            Emotional Intelligence Assessment
+          </div>
+          <div class="text-xs text-zinc-400">Candidate: Alex Morgan · Session #EQ-2048</div>
+        </div>
+      </div>
+      <div class={[
+        "flex items-center gap-2 px-[15px] py-2 rounded-full",
+        if(@low, do: "bg-red-600 text-white", else: "bg-white/10 text-white")
+      ]}>
+        <span class="w-[7px] h-[7px] rounded-full bg-current inline-block"></span>
+        <span class="tabular-nums font-bold text-[15px] tracking-[.02em]">
+          {format_time(@time_left)}
+        </span>
+        <span class="text-[11px] opacity-70 font-medium">remaining</span>
+      </div>
+    </header>
+    """
+  end
+
+  attr :answered, :integer, required: true
+  attr :total, :integer, required: true
+
+  def progress_bar(assigns) do
+    ~H"""
+    <div class="h-[5px] bg-zinc-200 w-full">
+      <div
+        class="h-full bg-brand transition-[width] duration-300 ease-out"
+        style={"width: #{if @total > 0, do: round(@answered / @total * 100), else: 0}%"}
+      >
+      </div>
+    </div>
+    """
+  end
+
+  attr :correct, :integer, required: true
+  attr :total, :integer, required: true
+  attr :time_used, :string, required: true
+
+  def result_card(assigns) do
+    assigns =
+      assign(
+        assigns,
+        :pct,
+        if(assigns.total > 0, do: round(assigns.correct / assigns.total * 100), else: 0)
+      )
+
+    ~H"""
+    <div class="flex-1 flex items-start justify-center px-7 py-12">
+      <div class="w-full max-w-[560px] bg-white border border-zinc-200 rounded-2xl px-[42px] py-11 shadow-[0_4px_24px_rgba(0,0,0,.06)] text-center">
+        <div class="w-16 h-16 rounded-full bg-[#fff4ee] flex items-center justify-center mx-auto mb-5 text-3xl text-brand">
+          ✓
+        </div>
+        <div class="text-xs font-bold tracking-[.06em] uppercase text-zinc-400">
+          Assessment Complete
+        </div>
+        <h1 class="text-[26px] font-extrabold -tracking-[.02em] mt-2 mb-1 text-zinc-900">
+          Thanks, Alex Morgan
+        </h1>
+        <p class="text-sm text-zinc-500 mb-7">Your responses have been submitted successfully.</p>
+
+        <div class="flex items-baseline justify-center gap-1.5 mb-1.5">
+          <span class="text-[64px] font-extrabold -tracking-[.03em] text-brand leading-none">
+            {@pct}
+          </span>
+          <span class="text-[28px] font-bold text-brand">%</span>
+        </div>
+        <div class="text-sm text-zinc-600 mb-7 font-medium">
+          {@correct} of {@total} answered correctly
+        </div>
+
+        <div class="grid grid-cols-3 gap-3 text-center">
+          <div class="bg-zinc-100 rounded-xl px-2.5 py-4">
+            <div class="text-[22px] font-extrabold text-green-600">{@correct}</div>
+            <div class="text-[11px] text-zinc-500 mt-0.5 font-semibold">Correct</div>
+          </div>
+          <div class="bg-zinc-100 rounded-xl px-2.5 py-4">
+            <div class="text-[22px] font-extrabold text-red-600">{@total - @correct}</div>
+            <div class="text-[11px] text-zinc-500 mt-0.5 font-semibold">Incorrect</div>
+          </div>
+          <div class="bg-zinc-100 rounded-xl px-2.5 py-4">
+            <div class="text-[22px] font-extrabold text-zinc-900">{@time_used}</div>
+            <div class="text-[11px] text-zinc-500 mt-0.5 font-semibold">Time used</div>
+          </div>
+        </div>
+
+        <button
+          phx-click="retake"
+          class="mt-7 px-7 py-3 border-[1.5px] border-zinc-300 rounded-[10px] bg-white text-zinc-900 text-sm font-bold cursor-pointer hover:bg-zinc-50"
+        >
+          Retake test
+        </button>
+      </div>
+    </div>
+    """
+  end
+
+  attr :question, :map, required: true
+  attr :idx, :integer, required: true
+  attr :total, :integer, required: true
+  attr :answered, :integer, required: true
+  attr :answer, :string, default: nil
+  attr :flagged, :boolean, default: false
+
+  def question_card(assigns) do
+    ~H"""
+    <main class="flex-1 bg-white border border-zinc-200 rounded-[14px] px-8 py-[30px] shadow-[0_1px_2px_rgba(0,0,0,.04)]">
+      <div class="flex items-center justify-between gap-4 mb-[18px]">
+        <div class="text-xs font-bold tracking-[.06em] uppercase text-brand">
+          Question {@idx + 1} <span class="text-zinc-400">/ {@total}</span>
+        </div>
+        <button
+          phx-click="toggle_flag"
+          class={[
+            "inline-flex items-center gap-[7px] px-[13px] py-2 rounded-[9px] text-[13px] font-semibold cursor-pointer transition-all",
+            if(@flagged,
+              do: "bg-amber-100 border-[1.5px] border-amber-500 text-amber-700",
+              else: "bg-white border-[1.5px] border-zinc-200 text-zinc-500"
+            )
+          ]}
+        >
+          <span class="text-[13px]">⚑</span>
+          <span>{if @flagged, do: "Flagged", else: "Flag for review"}</span>
+        </button>
+      </div>
+
+      <h1 class="text-[22px] leading-[1.4] font-bold -tracking-[.01em] text-zinc-900 mb-[26px] text-pretty">
+        {raw(@question.question)}
+      </h1>
+
+      <div class="flex flex-col gap-3">
+        <button
+          :for={o <- @question.options}
+          phx-click="select"
+          phx-value-question={@question.id}
+          phx-value-answer={o["option"]}
+          class={[
+            "flex items-start gap-3.5 w-full text-left px-[18px] py-4 rounded-xl cursor-pointer transition-all",
+            if(@answer == o["option"],
+              do: "bg-[#fff4ee] border-[1.5px] border-brand ring-[3px] ring-brand/10",
+              else: "bg-white border-[1.5px] border-zinc-200"
+            )
+          ]}
+        >
+          <span class={[
+            "flex-none w-7 h-7 rounded-lg flex items-center justify-center text-[13px] font-extrabold",
+            if(@answer == o["option"],
+              do: "bg-brand text-white",
+              else: "bg-zinc-100 text-zinc-500"
+            )
+          ]}>
+            {o["option"]}
+          </span>
+          <span class="text-[15px] leading-[1.5] text-zinc-800 text-left">{o["answer"]}</span>
+        </button>
+      </div>
+
+      <div class="flex items-center justify-between gap-3 mt-8 pt-[22px] border-t border-zinc-100">
+        <button
+          phx-click="prev"
+          disabled={@idx == 0}
+          class="px-5 py-[11px] rounded-[10px] text-sm font-bold border-[1.5px] transition-all border-zinc-300 bg-white text-zinc-900 cursor-pointer disabled:border-zinc-100 disabled:bg-zinc-50 disabled:text-zinc-300 disabled:cursor-not-allowed"
+        >
+          ←  Previous
+        </button>
+        <div class="text-[13px] text-zinc-400 font-medium">
+          {@answered} of {@total} answered
+        </div>
+        <button
+          phx-click="next"
+          disabled={@idx == @total - 1}
+          class="px-5 py-[11px] rounded-[10px] text-sm font-bold border-[1.5px] transition-all border-zinc-300 bg-white text-zinc-900 cursor-pointer disabled:border-zinc-100 disabled:bg-zinc-50 disabled:text-zinc-300 disabled:cursor-not-allowed"
+        >
+          Next  →
+        </button>
+      </div>
+    </main>
+    """
+  end
+
+  attr :questions, :list, required: true
+  attr :idx, :integer, required: true
+  attr :answers, :map, required: true
+  attr :flagged, :map, required: true
+
+  def question_navigator(assigns) do
+    ~H"""
+    <aside class="w-72 flex-none bg-white border border-zinc-200 rounded-[14px] p-[22px] shadow-[0_1px_2px_rgba(0,0,0,.04)]">
+      <div class="text-[13px] font-bold text-zinc-900 mb-4">Question Navigator</div>
+      <div class="grid grid-cols-5 gap-[9px]">
+        <button
+          :for={{q, i} <- Enum.with_index(@questions)}
+          phx-click="go_to"
+          phx-value-idx={i}
+          class={[
+            "relative h-[42px] rounded-[9px] text-sm font-bold cursor-pointer transition-all flex items-center justify-center border-[1.5px]",
+            cond do
+              i == @idx ->
+                "bg-brand text-white border-brand shadow-[0_2px_6px_rgba(253,79,0,.35)]"
+
+              @answers[q.id] != nil ->
+                "bg-zinc-900 text-white border-zinc-900"
+
+              true ->
+                "bg-white text-zinc-700 border-zinc-300"
+            end
+          ]}
+        >
+          <span>{i + 1}</span>
+          <span
+            :if={@flagged[i]}
+            class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-500 border-2 border-white"
+          ></span>
+        </button>
+      </div>
+
+      <div class="flex flex-col gap-[9px] my-5 pt-[18px] border-t border-zinc-100 text-xs text-zinc-600">
+        <div class="flex items-center gap-[9px]">
+          <span class="w-4 h-4 rounded-[5px] bg-brand flex-none"></span> Current question
+        </div>
+        <div class="flex items-center gap-[9px]">
+          <span class="w-4 h-4 rounded-[5px] bg-zinc-900 flex-none"></span> Answered
+        </div>
+        <div class="flex items-center gap-[9px]">
+          <span class="w-4 h-4 rounded-[5px] bg-white border-[1.5px] border-zinc-300 flex-none"></span>
+          Not answered
+        </div>
+        <div class="flex items-center gap-[9px]">
+          <span class="relative w-4 h-4 rounded-[5px] bg-white border-[1.5px] border-zinc-300 flex-none">
+            <span class="absolute -top-[3px] -right-[3px] w-2 h-2 rounded-full bg-amber-500 border-[1.5px] border-white"></span>
+          </span>
+          Flagged for review
+        </div>
+      </div>
+
+      <button
+        phx-click="ask_submit"
+        class="w-full p-[13px] border-none rounded-[10px] bg-brand text-white text-sm font-bold cursor-pointer tracking-[.01em] hover:bg-[#e04600]"
+      >
+        Submit Test
+      </button>
+    </aside>
+    """
+  end
+
+  attr :answered, :integer, required: true
+  attr :total, :integer, required: true
+
+  def submit_modal(assigns) do
+    ~H"""
+    <div class="fixed inset-0 bg-zinc-900/50 flex items-center justify-center z-50 p-5">
+      <div class="w-full max-w-[420px] bg-white rounded-2xl p-[30px] shadow-[0_12px_40px_rgba(0,0,0,.25)]">
+        <h2 class="text-[19px] font-extrabold mb-2 text-zinc-900">Submit your test?</h2>
+        <p class="text-sm leading-[1.55] text-zinc-600 mb-5">
+          You have answered <strong class="text-zinc-900">{@answered} of {@total}</strong>
+          questions.
+          <span :if={@total - @answered > 0} class="text-red-600 font-semibold">
+            {@total - @answered} unanswered.
+          </span>
+          You won't be able to change your answers after submitting.
+        </p>
+        <div class="flex gap-2.5 justify-end">
+          <button
+            phx-click="cancel_submit"
+            class="px-5 py-[11px] border-[1.5px] border-zinc-300 rounded-[10px] bg-white text-zinc-900 text-sm font-bold cursor-pointer"
+          >
+            Keep working
+          </button>
+          <button
+            phx-click="confirm_submit"
+            class="px-5 py-[11px] border-none rounded-[10px] bg-brand text-white text-sm font-bold cursor-pointer"
+          >
+            Submit now
+          </button>
+        </div>
+      </div>
+    </div>
+    """
+  end
+
+  @doc "Zero-padded MM:SS from seconds."
+  def format_time(sec) do
+    m = div(sec, 60)
+    s = rem(sec, 60)
+    "#{String.pad_leading(to_string(m), 2, "0")}:#{String.pad_leading(to_string(s), 2, "0")}"
+  end
+end

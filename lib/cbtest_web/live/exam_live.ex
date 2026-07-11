@@ -1,6 +1,8 @@
 defmodule CbtestWeb.ExamLive do
   use CbtestWeb, :live_view
 
+  import CbtestWeb.ExamComponents
+
   alias Cbtest.{Questions, Answers}
 
   @duration 20 * 60
@@ -28,7 +30,7 @@ defmodule CbtestWeb.ExamLive do
        time_left: @duration,
        submitted: false,
        show_confirm: false
-     )}
+     ), layout: false}
   end
 
   @impl true
@@ -127,13 +129,6 @@ defmodule CbtestWeb.ExamLive do
   defp cancel_timer(ref), do: :timer.cancel(ref)
 
   # --- helpers used by the template ---
-
-  @doc "Zero-padded MM:SS from seconds."
-  def format_time(sec) do
-    m = div(sec, 60)
-    s = rem(sec, 60)
-    "#{String.pad_leading(to_string(m), 2, "0")}:#{String.pad_leading(to_string(s), 2, "0")}"
-  end
 
   @doc "Correct-answer letter, normalized to uppercase, handling both stored shapes."
   def correct_letter(%{"answer" => letter}), do: String.upcase(letter)
