@@ -54,7 +54,7 @@ defmodule Cbtest.Questions do
     Questions
     |> select(
       [q],
-      %{id: q.id, question: q.question, options: q.options}
+      %{id: q.id, question: q.question, options: q.options, correct_answer: q.correct_answer}
     )
     |> order_by(desc: :inserted_at)
     |> Repo.all()

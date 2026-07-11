@@ -40,4 +40,17 @@ defmodule Cbtest.Answers do
     from(Answers, where: [session: ^session_id, questions_id: ^question_id])
     |> Repo.one()
   end
+
+  def get_all_by_session(session_id) do
+    from(a in Answers,
+      where: a.session == ^session_id,
+      select: %{questions_id: a.questions_id, answer: a.answer}
+    )
+    |> Repo.all()
+  end
+
+  def delete_by_session(session_id) do
+    from(a in Answers, where: a.session == ^session_id)
+    |> Repo.delete_all()
+  end
 end

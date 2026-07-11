@@ -9,7 +9,8 @@ defmodule CbtestWeb.Endpoint do
     key: "_cbtest_key",
     signing_salt: "eJBhd5or",
     same_site: "Lax",
-    max_age: 60 * 60 * 24 # 24 hours
+    # 24 hours
+    max_age: 60 * 60 * 24
   ]
 
   socket "/live", Phoenix.LiveView.Socket,
